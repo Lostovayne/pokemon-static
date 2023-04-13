@@ -12,7 +12,16 @@ const HomePage: NextPage<Props> = ({ pokemons }) => {
 
 	return (
 		<>
-			<Layout title='Listado de Pokémons'>pokemon</Layout>
+			<Layout title='Listado de Pokémons'>
+				<ul>
+					<li>Pokemon</li>
+					<li>Pokemon</li>
+					<li>Pokemon</li>
+					<li>Pokemon</li>
+					<li>Pokemon</li>
+					<li>Pokemon</li>
+				</ul>
+			</Layout>
 		</>
 	)
 }
