@@ -3,7 +3,6 @@ import type { AppProps } from 'next/app'
 import '../styles/globals.css'
 import { darkTheme } from '../themes'
 
-const a = 122
 
 function MyApp({ Component, pageProps }: AppProps) {
 	return (
