@@ -24,13 +24,14 @@ const HomePage: NextPage<Props> = ({ pokemons }) => {
 }
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-	const { data } = await pokeApi.get<PokemonListResponse>('/pokemon/?limit=250&offset=149')
+	const { data } = await pokeApi.get<PokemonListResponse>('/pokemon/?limit=350')
 	//Es un arreglo de pokemons que son objetos, por eso el map retorna un objeto
-	let numero = 150
 	const pokemons: SmallPokemon[] = data.results.map((poke, i) => ({
 		...poke,
-		id: numero + i,
-		img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${numero + i}.svg`,
+		id: i + 1,
+		img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${
+			i + 1
+		}.svg`,
 	}))
 
 	return {

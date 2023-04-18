@@ -2,18 +2,19 @@ import { Button, Card, Container, Grid, Image, Text } from '@nextui-org/react'
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import { pokeApi } from '../../api'
 import { Layout } from '../../components/layouts'
-import { Pokemon } from '../../interfaces'
+import { Pokemon, PokemonListResponse } from '../../interfaces'
 import { getPokemonInfo, localFavorites } from '../../utils'
 import { useEffect, useState } from 'react'
 import confetti from 'canvas-confetti'
+
+//Interface del pokemon
 
 interface Props {
 	pokemon: Pokemon
 }
 
-const PokemonPage: NextPage<Props> = ({ pokemon }) => {
+const PokemonByNamePage: NextPage<Props> = ({ pokemon }) => {
 	const [isInFavorites, setIsInFavorites] = useState(false)
-
 	useEffect(() => {
 		setIsInFavorites(localFavorites.existInFavorites(pokemon.id))
 	}, [])
@@ -104,10 +105,11 @@ const PokemonPage: NextPage<Props> = ({ pokemon }) => {
 
 //creando el path ya que el [id] y retorna 250 rutas con ese id
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
-	const pokemons250 = [...Array(350)].map((value, index) => `${index + 1}`)
+	const { data } = await pokeApi.get<PokemonListResponse>('/pokemon?limit=350')
+	const datos: string[] = data.results.map((pokemon) => pokemon.name)
 	return {
-		paths: pokemons250.map((id) => ({
-			params: { id }, //id : id
+		paths: datos.map((name) => ({
+			params: { name }, //id : id
 		})),
 
 		fallback: false,
@@ -115,13 +117,13 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-	const { id } = params as { id: string }
+	const { name } = params as { name: string }
 
 	return {
 		props: {
-			pokemon: getPokemonInfo(id),
+			pokemon: getPokemonInfo(name),
 		},
 	}
 }
 
-export default PokemonPage
+export default PokemonByNamePage
