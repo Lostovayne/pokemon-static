@@ -23,6 +23,8 @@ const HomePage: NextPage<Props> = ({ pokemons }) => {
 	)
 }
 
+//terminado! 
+
 export const getStaticProps: GetStaticProps = async (ctx) => {
 	const { data } = await pokeApi.get<PokemonListResponse>('/pokemon/?limit=120')
 	//Es un arreglo de pokemons que son objetos, por eso el map retorna un objeto
