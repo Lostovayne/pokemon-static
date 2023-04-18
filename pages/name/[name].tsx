@@ -105,7 +105,7 @@ const PokemonByNamePage: NextPage<Props> = ({ pokemon }) => {
 
 //creando el path ya que el [id] y retorna 250 rutas con ese id
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
-	const { data } = await pokeApi.get<PokemonListResponse>('/pokemon?limit=350')
+	const { data } = await pokeApi.get<PokemonListResponse>('/pokemon?limit=120')
 	const datos: string[] = data.results.map((pokemon) => pokemon.name)
 	return {
 		paths: datos.map((name) => ({
