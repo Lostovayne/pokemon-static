@@ -2,22 +2,21 @@ import { Button, Card, Container, Grid, Image, Text } from '@nextui-org/react'
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next'
 import { pokeApi } from '../../api'
 import { Layout } from '../../components/layouts'
-import { Pokemon, PokemonListResponse } from '../../interfaces'
+import { Pokemon } from '../../interfaces'
 import { getPokemonInfo, localFavorites } from '../../utils'
 import { useEffect, useState } from 'react'
 import confetti from 'canvas-confetti'
-
-//Interface del pokemon
 
 interface Props {
 	pokemon: Pokemon
 }
 
-const PokemonByNamePage: NextPage<Props> = ({ pokemon }) => {
+const PokemonPage: NextPage<Props> = ({ pokemon }) => {
 	const [isInFavorites, setIsInFavorites] = useState(false)
+
 	useEffect(() => {
 		setIsInFavorites(localFavorites.existInFavorites(pokemon.id))
-	}, [pokemon.id])
+	}, [])
 
 	//favorite
 	const onToggleFavorite = () => {
@@ -105,38 +104,45 @@ const PokemonByNamePage: NextPage<Props> = ({ pokemon }) => {
 
 //creando el path ya que el [id] y retorna 250 rutas con ese id
 export const getStaticPaths: GetStaticPaths = async (ctx) => {
-	const { data } = await pokeApi.get<PokemonListResponse>('/pokemon?limit=120')
-	const datos: string[] = data.results.map((pokemon) => pokemon.name)
+	const pokemons250 = [...Array(350)].map((value, index) => `${index + 1}`)
 	return {
-		paths: datos.map((name) => ({
-			params: { name }, //id : id
+		paths: pokemons250.map((id) => ({
+			params: { id }, //id : id
 		})),
-
 		// fallback: false,
-		fallback: 'blocking',
+		 fallback: 'blocking',
+		
 	}
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-	const { name } = params as { name: string }
+	const { id } = params as { id: string }
 
-	const pokemon = await getPokemonInfo(name)
-
+	const pokemon = await getPokemonInfo(id)
+	// Agregar el incremental static Generation
+	
 	if (!pokemon) {
+		
 		return {
 			redirect: {
 				destination: '/',
-
 				permanent: false,
 			},
 		}
+		
+	
+		
 	}
+	
+	
 
 	return {
 		props: {
-			pokemon,
+			pokemon
 		},
+
+		revalidate: 10,
 	}
 }
 
-export default PokemonByNamePage
+export default PokemonPage
