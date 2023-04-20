@@ -109,19 +109,36 @@ export const getStaticPaths: GetStaticPaths = async (ctx) => {
 		paths: pokemons250.map((id) => ({
 			params: { id }, //id : id
 		})),
-
-		fallback: false,
+		// fallback: false,
+		 fallback: 'blocking',
+		
 	}
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
 	const { id } = params as { id: string }
 
+	const pokemon = await getPokemonInfo(id)
 	// Agregar el incremental static Generation
+	
+	if (!pokemon) {
+		
+		return {
+			redirect: {
+				destination: '/',
+				permanent: false,
+			},
+		}
+		
+	
+		
+	}
+	
+	
 
 	return {
 		props: {
-			pokemon: await getPokemonInfo(id),
+			pokemon
 		},
 
 		revalidate: 10,
